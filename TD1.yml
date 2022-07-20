@@ -121,19 +121,42 @@ paths:
         - Students
       operationId: Update existing students
       summary : Update existing students
-      description: Update students when id are provided
-      parameters:
-        - name: id
-          in: query
-          schema:
-            type: integer
-          required: true
+      description: |
+        Possible updates on:
+        * name: change
+        * address: change
+        * birth_date: change
+        * phone number: add
       requestBody:
         description: Student to be updated
         content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Student'
+              examples:
+                changeName:
+                  summary: Changer name
+                  description: How to change student's name and what it delete
+                  value:
+                    name: string
+                changeAddress:
+                  summary: Change address
+                  description: How to change student's address 
+                  value:
+                    address: string
+                changeBirthdate:
+                  summary: Change birthday
+                  description: How to change student's birthday
+                  value:
+                    birth_date: string
+                addPhoneNumber:
+                  summary: add phone number
+                  description: Add phone number(s)
+                  value:
+                    id: 1
+                    phoneNumber:
+                    - country_code: "261"
+                      phoneNumber: "034 34 544 55"
         required: true
       responses:
         200:
@@ -261,7 +284,6 @@ paths:
           in: query
           schema:
             type: integer
-          required: true
       requestBody:
         description: Course to be updated
         content:
@@ -290,6 +312,10 @@ components:
           type: string
           format: date
           example: "2022-01-01"
+        phone number:
+          type: array
+          items:
+            $ref: '#/components/schemas/PhoneNumber'
     Student:
       allOf:
         - $ref: '#/components/schemas/CreateStudent'
@@ -298,6 +324,9 @@ components:
         id:
           type: integer
           example: 10
+        phoneNumber:
+          type: array
+          
     CreateCourse:
       type: object
       properties:
@@ -321,3 +350,12 @@ components:
         id:
           type: integer
           example: 14
+    PhoneNumber:
+      type: object
+      properties:
+        country_code:
+          type: string
+          example: "+261"
+        number: 
+          type: string
+          example: "0345320471"
