@@ -1,0 +1,238 @@
+openapi: 3.0.1
+info:
+  title: Cinéma STD21021 API
+  description: 'Global description of my API'
+  version: 1.0.0
+servers:
+ - url: https://STD21000.com
+tags: 
+ - name: Films
+paths:
+ /film/{id}:
+    get:
+      tags:
+        - Films
+      operationId: get film by identifier
+      summary: Get film by identifier
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        200: 
+          description: List of films
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Film'
+        400:
+          description: Bad request
+    delete:
+      tags:
+        - Films
+      operationId: delete film by identifier
+      summary: Delete film by identifier
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        200: 
+          description: Ressource deleted
+        400:
+          description: Bad request
+    patch:
+      tags:
+        - Films
+      operationId: Update existing films by identifier
+      summary: Update existing films by identifier
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: The updated films
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Film'
+        400:
+          description: Bad request
+    put:
+      tags:
+        - Films
+      operationId: Put film by identifier
+      summary: Put film by identifier
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: The created or updated films
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Film'
+        400:
+          description: Bad request
+ /films:
+    get:
+      tags:
+        - Films
+      operationId: getStudents
+      summary: Get all films
+      description: Get all films with details
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        200: 
+          description: List of films
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/Film'
+        400:
+          description: Bad request
+    post: 
+      tags:
+        - Films
+      operationId: create film
+      summary : Create new fim
+      description: Create new film
+      requestBody:
+        description: Student to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFilm'
+        required: true
+      responses:
+        200:
+          description: List of fims
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Film'
+        400:
+          description: Bad request 
+    put:
+      tags:
+        - Films
+      operationId: Create new film or update existing films
+      summary : Create new film or update existing films
+      description: Update films when id are provided, create them otherwise
+      requestBody:
+        description: Film to be created
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Film'
+        required: true
+      responses:
+        200:
+          description: The created or updated films
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Film'
+        400:
+          description: Bad request
+    patch:
+      tags:
+        - Films
+      operationId: Update existing films
+      summary : Update existing films
+      description: |
+        Possible updates on:
+        * title: change
+        * description: change
+        * duration: change
+        * ProjectionDetails: add or change
+      requestBody:
+        description: Film to be updated
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Film'
+              examples:
+                changeTitle:
+                  summary: Changer title
+                  description: How to change film's name
+                  value:
+                    title: string
+                changeDescription:
+                  summary: Change description
+                  description: How to change film's description
+                  value:
+                    description: string
+                changeDuration:
+                  summary: Change duration
+                  description: How to change film's duration
+                  value:
+                    duration: string
+                changeProjectionDetails:
+                  summary: Change projectionDetails
+                  description: How to change film's projectionDetails
+                  value:
+                    room: string
+                    day: string
+        required: true
+      responses:
+        200:
+          description: The updated films
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Film'
+        400:
+          description: Bad request
+components:
+  schemas:
+    CreateFilm:
+      type: object
+      properties:
+        title:
+          type: string
+          example: "Mission Impossible"
+        description:
+          type: string
+          example: "Lorem ipsum"
+        duration:
+          type: string
+          example: "2H 30"
+        ProjectionDetails:
+          type: array
+          items:
+            $ref: '#/components/schemas/Projection'
+    Film:
+      allOf:
+        - $ref: '#/components/schemas/CreateFilm'
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+    Projection:
+      type: object
+      properties:
+        room:
+          type: string
+          example: "Room 2"
+        day: 
+          type: string
+          example: "Monday 25 July 2022"
