@@ -7,6 +7,8 @@ servers:
  - url: https://STD21000.com
 tags: 
  - name: Films
+ - name: Projections
+ - name: Category
 paths:
  /film/{id}:
     get:
@@ -91,7 +93,7 @@ paths:
     get:
       tags:
         - Films
-      operationId: getStudents
+      operationId: getFilms
       summary: Get all films
       description: Get all films with details
       parameters:
@@ -115,7 +117,7 @@ paths:
       summary : Create new fim
       description: Create new film
       requestBody:
-        description: Student to be created
+        description: Film to be created
         content:
           application/json:
             schema:
@@ -201,24 +203,317 @@ paths:
                 $ref: '#/components/schemas/Film'
         400:
           description: Bad request
+ /projection/{id}:
+    get:
+      tags:
+        - Projections
+      operationId: get projections by identifier
+      summary: Get projections by identifier
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        200: 
+          description: List of projections
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/Projection'
+        400:
+          description: Bad request
+    delete:
+      tags:
+        - Projections
+      operationId: delete projection by identifier
+      summary: Delete projection by identifier
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        200: 
+          description: Ressource deleted
+        400:
+          description: Bad request
+    patch:
+      tags:
+        - Projections
+      operationId: Update existing projection by identifier
+      summary: Update existing projection by identifier
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: The updated projection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projection'
+        400:
+          description: Bad request
+    put:
+      tags:
+        - Projections
+      operationId: Put projection by identifier
+      summary: Put projection by identifier
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+          required: true
+      responses:
+        200:
+          description: The created or updated projection
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projection'
+        400:
+          description: Bad request
+ /projection:
+    get:
+      tags:
+        - Projections
+      operationId: getProjections
+      summary: Get all projections
+      description: Get all projections with details
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+      responses:
+        200: 
+          description: List of projections
+          content:
+            application/json:
+              schema:
+                 $ref: '#/components/schemas/Projection'
+        400:
+          description: Bad request
+    post: 
+      tags:
+        - Projections
+      operationId: create projection
+      summary : Create new projection
+      description: Create new projection
+      requestBody:
+        description: Projection to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjection'
+        required: true
+      responses:
+        200:
+          description: List of projections
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projection'
+        400:
+          description: Bad request 
+    put:
+      tags:
+        - Projections
+      operationId: Create new projection or update existing projection
+      summary : Create new projection or update existing projection
+      description: Update projections when id are provided, create them otherwise
+      requestBody:
+        description: Projection to be created
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projection'
+        required: true
+      responses:
+        200:
+          description: The created or updated projections
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projection'
+        400:
+          description: Bad request
+    patch:
+      tags:
+        - Projections
+      operationId: Update existing projections
+      summary : Update existing projection
+      description: |
+        Possible updates on:
+        * Film: change
+        * Room: change
+        * Hour: change
+      requestBody:
+        description: Projection to be updated
+        content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projection'
+              examples:
+                changeFilm:
+                  summary: Change Film
+                  description: How to change projection's film
+                  value:
+                    Film: array
+                changeRoom:
+                  summary: Change Room
+                  description: How to change projection's room
+                  value:
+                    Room: string
+                changeHour:
+                  summary: Change hour
+                  description: How to change projection's hour
+                  value:
+                    hour: string
+        required: true
+      responses:
+        200:
+          description: The updated films
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Projection'
+        400:
+          description: Bad request
+ /category:
+    get:
+      tags:
+        - Category
+      operationId: getFilm 
+      summary: Get fims by category
+      description: Get fims by category
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+            example: "Romantique"
+      responses:
+        200: 
+          description: List of films
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/CreateFilm'
+        400:
+          description: Bad request
+    post: 
+      tags:
+        - Category
+      operationId: create filmList per Category
+      summary : create filmList per Category
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+          required: true
+      requestBody:
+        description: Film to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateFilm'
+        required: true
+      responses:
+        200:
+          description: List of fims
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Film'
+        400:
+          description: Bad request
+ /category/{name}:
+    get:
+      tags:
+        - Category
+      operationId: get films by category name
+      summary: get films by category name
+      parameters:
+        - name: name
+          in: path
+          schema:
+            type: string
+          required: true
+      responses:
+        200: 
+          description: List of films
+          content:
+            application/json:
+              schema:
+                type: array
+                items: 
+                  $ref: '#/components/schemas/CreateFilm'
+        400:
+          description: Bad request
 components:
   schemas:
+    Room:
+      type: object
+      properties:
+        location:
+          type: string
+          example: "A"
+        capacity:
+          type: number
+          example: 100
+    CreateProjection:
+      type: object
+      properties:
+        Film:
+          type: array
+          items:
+            $ref: '#/components/schemas/Film'
+        Room:
+          type: string
+          example: "A"
+        Hour:
+          type: array
+          items:
+            $ref: '#/components/schemas/Room'
+    Projection:
+      allOf:
+        - $ref: '#/components/schemas/CreateProjection'
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10
     CreateFilm:
       type: object
       properties:
         title:
           type: string
           example: "Mission Impossible"
-        description:
-          type: string
-          example: "Lorem ipsum"
         duration:
           type: string
           example: "2H 30"
-        ProjectionDetails:
-          type: array
-          items:
-            $ref: '#/components/schemas/Projection'
+        summary:
+          type: string
+          example: "Lorem ipsum"
+        director:
+          type: string
+          example: "David Lynch"
+        release date:
+          type: string
+          example: "21 Juillet 2021"
     Film:
       allOf:
         - $ref: '#/components/schemas/CreateFilm'
@@ -227,12 +522,3 @@ components:
         id:
           type: integer
           example: 10
-    Projection:
-      type: object
-      properties:
-        room:
-          type: string
-          example: "Room 2"
-        day: 
-          type: string
-          example: "Monday 25 July 2022"
