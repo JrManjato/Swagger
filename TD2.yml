@@ -393,24 +393,18 @@ paths:
     get:
       tags:
         - Category
-      operationId: getFilm 
-      summary: Get fims by category
-      description: Get fims by category
-      parameters:
-        - name: category
-          in: query
-          schema:
-            type: string
-            example: "Romantique"
+      operationId: get all category
+      summary: Get category
+      description: Get category
       responses:
         200: 
-          description: List of films
+          description: List of Category
           content:
             application/json:
               schema:
                 type: array
                 items: 
-                  $ref: '#/components/schemas/CreateFilm'
+                  $ref: '#/components/schemas/Category'
         400:
           description: Bad request
     post: 
@@ -465,6 +459,15 @@ paths:
           description: Bad request
 components:
   schemas:
+    Category:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 2
+        name:
+          type: string
+          example: "Romantique"
     Room:
       type: object
       properties:
