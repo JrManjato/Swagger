@@ -10,6 +10,7 @@ tags:
   - name: Projection
   - name: Room
   - name: Category
+  - name: Calendar
 paths:
   /films:
     get:
@@ -240,6 +241,30 @@ paths:
             application/json:
               schema:   
                 $ref: '#/components/schemas/badrequest'
+  /calendar:
+    get:
+      tags:
+        - Calendar
+      
+      summary: Get weekly calendar
+      description: List of projections and films in a week
+      responses:
+        200:
+          description: List of all films
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/calendar'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/badrequest'
   /projections:
     get:
       tags:
@@ -464,9 +489,7 @@ paths:
           description: Projection of a week
           content:
             application/json:
-              schema:   
-                type: array
-                items:
+              schema:
                 $ref: '#/components/schemas/weekProjection'
         400:
           description: Bad request
@@ -626,6 +649,9 @@ components:
           type: number
           example: 100
     projection:
+      allOf:
+        - $ref: '#/components/schemas/calendarProjection'
+    calendarProjection:
       type: object
       properties:
         id:
@@ -637,7 +663,8 @@ components:
         Film:
           $ref: '#/components/schemas/film'
         Room:
-          $ref: '#/components/schemas/room'
+         type: string
+         example: "A"
     newProjection:
       type: object
       properties:
@@ -686,3 +713,36 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/projection'
+    calendar:
+      type: object
+      properties:
+        weekOf:
+          type: string
+          format: date
+          example:  2022-08-02
+        calendar:
+          type: array
+          items:
+            $ref: '#/components/schemas/day'
+    day:
+      type: object
+      properties:
+        dayValue:
+          type: integer
+          example: 1
+        date: 
+          type: string
+          format: date
+        schedules:
+          type: array
+          items:
+            $ref: '#/components/schemas/schedules'
+    schedules:
+      type: object
+      properties:
+          hour:
+            type: string
+            example: time
+          projection:
+            $ref: '#/components/schemas/calendarProjection'
+            
